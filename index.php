@@ -1,3 +1,45 @@
+<?php
+
+# Mengatur instance dari Azure::Storage::Client
+$connectionString = "DefaultEndpointsProtocol=https;AccountName=;AccountKey=".getenv('account_key');
+
+// Membuat blob client.
+$blobClient = BlobRestProxy::createBlobService($connectionString);
+
+# Membuat BlobService yang merepresentasikan Blob service untuk storage account
+$createContainerOptions = new CreateContainerOptions();
+
+$createContainerOptions->setPublicAccess(PublicAccessType::CONTAINER_AND_BLOBS);
+
+// Menetapkan metadata dari container.
+$createContainerOptions->addMetaData("key1", "bGVd7OMBukLbRCP+sxAdpWJgnewIWBwz4ICjn/ga6lLjMd2GpxWbjLVycNvCQ2y1AMJ3hFNT3DUMNn2QgNXFWw==");
+$createContainerOptions->addMetaData("key2", "qWmDcAHHOW+IJJfbDZ2p1cFLILEF0rAi0rCK5ItWCR1krOC2YR+e2Pc1zyOAZdBcqqzi9uSSk4am4cetDvjKow==");
+
+$containerName = "blockblobs".generateRandomString();
+
+try {
+// Membuat container.
+    $blobClient->createContainer($containerName, $createContainerOptions);
+    $myfile = fopen("HelloWorld.txt", "w") or die("Unable to open file!");
+    fclose($myfile);
+
+# Mengunggah file sebagai block blob
+    echo "Uploading BlockBlob: " . PHP_EOL;
+    echo $fileToUpload;
+    echo "<br />";
+
+    $content = fopen($fileToUpload, "r");
+
+//Mengunggah blob
+    $blobClient->createBlockBlob($containerName, $fileToUpload, $content);
+
+}catch(Exception $e) {
+    echo "Failed: " . $e;
+}
+
+
+?>
+
 <html>
  <head>
  <Title>Registration Form</Title>
@@ -45,6 +87,9 @@
             $email = $_POST['email'];
             $job = $_POST['job'];
             $date = date("Y-m-d");
+
+
+
             // Insert data
             $sql_insert = "INSERT INTO Registration (name, email, job, date) 
                         VALUES (?,?,?,?)";
