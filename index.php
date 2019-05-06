@@ -1,4 +1,6 @@
 <?php
+require_once("$IP/extensions/WindowsAzureSDK/WindowsAzureSDK.php");
+require_once("$IP/extensions/WindowsAzureStorage/WindowsAzureStorage.php");
 
 # Mengatur instance dari Azure::Storage::Client
 $connectionString = "DefaultEndpointsProtocol=https;AccountName=;AccountKey=".getenv('account_key');
